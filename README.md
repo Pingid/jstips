@@ -18,6 +18,53 @@ To get updates, watch the repo and follow the [Twitter account](https://twitter
 
 # Tips list
 
+## - Prototypal inheritance
+
+> by [@pingid](https://twitter.com/danmbeaven)
+
+Often you see the classical pattern where you use a constructor function and then instantiate an object using that function and the `new` operator. In the prototypal pattern, you create an object and use the `Object.create()` method to make a new instance of that object.
+
+```javascript
+var Cocktail = {
+  alcoholic: true,
+  sayName: function() {
+    console.log(this.name)
+  }
+}
+
+var martini = Object.create(Cocktail);
+martini.name = 'martini';
+martini.ingredients = [ 'dry gin', 'dry vermouth' ];
+
+martini.sayName() // martini
+```
+
+A neat trick is the make an ```extend()``` method which takes in a new object and adds all the values to the new instance.
+
+```javascript
+var Cocktail = {
+  extend: function(values) {
+    var instance = Object.create(this);
+    Object.keys(values).forEach(function(key){
+      instance[key] = values[key];
+    })
+    return instance;
+  },
+  sayName: function() {
+    console.log(this.name)
+  },
+  alcoholic: true
+}
+
+var martini = Cocktail.extend({
+  name: 'martini',
+  ingredients: [ 'dry gin', 'dry vermouth' ]
+})
+
+martini.sayName() // martini
+```
+
+
 ## #07 - "use strict" and get lazy
 
 > 2016-01-07 by [@nainslie](https://twitter.com/nat5an)
@@ -58,14 +105,6 @@ By including this directive in a JavaScript file or function, we will direct the
 * Protects you from using reserved words or future reserved words as variable names
 
 Strict mode is great for new projects, but can be challenging to introduce into older projects that don't already use it in most places.  It also can be problematic if your build chain concatenates all your js files into one big file, as this may cause all files to execute in strict mode.
-
-It is not a statement, but a literal expression, ignored by earlier versions of JavaScript.  
-Strict mode is supported in:
-* Internet Explorer from version 10. 
-* Firefox from version 4.
-* Chrome from version 13. 
-* Safari from version 5.1. 
-* Opera from version 12.
 
 [See MDN for a fuller description of strict mode](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Strict_mode).
 
